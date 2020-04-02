@@ -1090,6 +1090,28 @@ class reStructuredTextChecker(object):
                 assert 0 < code < 100, code
                 code += 100 * rst_error.level
                 msg = "%s%03i %s" % (rst_prefix, code, msg)
+                if code == 213:
+                    if "\nArgs:\n" in unindented and unindented.find(
+                        "\nArgs:\n"
+                    ) < unindented.find("    *args:"):
+                        # Ignore special case used in Google docstring style
+                        continue
+                    if "\nParameters\n----------\n" in unindented and unindented.find(
+                        "\nParameters\n----------\n"
+                    ) < unindented.find("\n*args\n"):
+                        # Ignore special case used in NumPy docstring style
+                        continue
+                if code == 210:
+                    if "\nArgs:\n" in unindented and unindented.find(
+                        "\nArgs:\n"
+                    ) < unindented.find("    **kwargs:"):
+                        # Ignore special case used in Google docstring style
+                        continue
+                    if "\nParameters\n----------\n" in unindented and unindented.find(
+                        "\nParameters\n----------\n"
+                    ) < unindented.find("\n**kwargs\n"):
+                        # Ignore special case used in NumPy docstring style
+                        continue
 
                 # This will return the line number by combining the
                 # start of the docstring with the offet within it.
